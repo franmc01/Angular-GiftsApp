@@ -1,6 +1,6 @@
 import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { GiphyResponse, Data } from '../models/giphy.model';
 
 
@@ -28,8 +28,14 @@ export class GifService {
       this._historial = this._historial.splice(0, 10);
       localStorage.setItem('historial', JSON.stringify(this._historial));
     }
-    const url = `${environment.giphyUrl}/search?api_key=${environment.apiKeyGiphy}&q=${query}&limit=10`;
-    this.http.get<GiphyResponse>(url).subscribe(resp => {
+
+    const params = new HttpParams()
+      .set('api_key', environment.apiKeyGiphy)
+      .set('limit', '15')
+      .set('q', query)
+
+    const url = `${environment.giphyUrl}/search?`;
+    this.http.get<GiphyResponse>(url, { params }).subscribe(resp => {
       this.resultados = resp.data;
       localStorage.setItem('resultados', JSON.stringify(this.resultados));
     })
